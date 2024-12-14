@@ -23,7 +23,29 @@ const exec = (i, t) => {
 	return fres;
 };
 
-console.assert(exec(ee, 6).length === 22);
-console.assert(exec(ee, 25).length === 55312);
-console.log(exec(ii, 75).length);
+const hash = {};
+const exec2 = (stone, times) => {
+	if (hash.hasOwnProperty(stone) && times > 0) {
+		return hash[stone];
+	}
+
+	if (times === 0) {
+		return 1;
+	} else if (stone === 0) {
+		return exec2(1, times-1);
+	} else if (String(stone).length % 2 === 0) {
+		const res = String(stone);
+		const half = Math.floor(res.length / 2);
+		const result = exec2(Number(res.slice(0, half)), times - 1) + exec2(Number(res.slice(half)), times - 1);
+		hash[stone] = result;
+		return result;
+	} else {
+		const result = exec2(stone * 2024, times - 1);
+		hash[stone] = result;
+		return result;
+	}
+};
+
+// console.log(ii.reduce((sum, item) => sum + exec2(item, 75), 0));
+console.log(ee.reduce((sum, item) => sum + exec2(item, 4), 0));
 
